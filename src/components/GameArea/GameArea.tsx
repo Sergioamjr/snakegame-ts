@@ -1,7 +1,9 @@
 import * as React from "react";
 import "./GameArea.scss";
 
-const GameArea: React.FC = props => {
+type Props = {};
+
+const GameArea: React.FC<Props> = props => {
   return <div className="game-area">{props.children}</div>;
 };
 

@@ -1,15 +1,20 @@
 import React from "react";
 import GameArea from "./components/GameArea";
 import _get from "lodash/get";
-import { swithNewDirection, updateSnakeHistory } from "./utils";
+import {
+  swithNewDirection,
+  updateSnakeHistory,
+  generateRandomPoint
+} from "./utils";
 
 const stateDefault = {
   direction: "right",
-  time: 500,
+  time: 100,
   history: {
-    position_1: [400 / 2, 200 / 2]
+    position_1: [400 / 2, 200 / 2],
+    position_2: [400 / 2 - 10, 200 / 2]
   },
-  point: [30, 20]
+  target: generateRandomPoint()
 };
 
 interface State {
@@ -18,7 +23,7 @@ interface State {
   history: {
     [k: string]: Array<Number>;
   };
-  point: Array<Number>;
+  target: Array<Number>;
 }
 
 class App extends React.Component<{}, State> {
@@ -35,20 +40,28 @@ class App extends React.Component<{}, State> {
     document.removeEventListener("keydown", this.updateDirectionHandler);
   };
 
-  // componentDidUpdate = (_prevProps: {}, prevState: State) => {
-  //   if (prevState.history !== this.state.history) {
-  //     this.gameHasBeenOvered();
-  //   }
-  // };
+  componentDidUpdate = (_prevProps: {}, prevState: State) => {
+    if (prevState.history !== this.state.history) {
+      this.addNewPoint();
+    }
+  };
 
-  // gameHasBeenOvered = () => {
-  //   const {
-  //     snake: { x, y }
-  //   } = this.state;
-  //   if (x < 0 || x >= 400 || y < 0 || y >= 200) {
-  //     console.log("Game Over");
-  //   }
-  // };
+  addNewPoint = () => {
+    const historyLength = Object.values(this.state.history).length;
+    const [x, y] = Object.values(this.state.history)[0];
+    const [lastX, lastY] = Object.values(this.state.history)[historyLength - 1];
+    const [pointX, pointY] = this.state.target;
+    if (x === pointX && y === pointY) {
+      let newHistory = {
+        ...this.state.history,
+        [`position_${historyLength + 1}`]: [lastX, lastY]
+      };
+      this.setState({
+        target: generateRandomPoint(),
+        history: newHistory
+      });
+    }
+  };
 
   updateDirectionHandler = (event: KeyboardEvent) => {
     const code = _get(event, "code", "");
@@ -83,31 +96,33 @@ class App extends React.Component<{}, State> {
   };
 
   render() {
-    const { history, point } = this.state;
-    const [pointX, pointY] = point;
+    const { history, target } = this.state;
+    const [pointX, pointY] = target;
     return (
-      <GameArea>
-        {pointX && pointY && (
+      <React.Fragment>
+        <p className="points">Score: {Object.keys(history).length - 2}</p>
+        <GameArea>
           <div
             className="snake snake-point"
             style={{
               transform: `translate(${pointX}px, ${pointY}px)`
             }}
           ></div>
-        )}
-        {Object.entries(history).map(([name, values]) => {
-          const [x, y] = values;
-          return (
-            <div
-              key={name}
-              className="snake"
-              style={{
-                transform: `translate(${x}px, ${y}px)`
-              }}
-            ></div>
-          );
-        })}
-      </GameArea>
+
+          {Object.entries(history).map(([name, values]) => {
+            const [x, y] = values;
+            return (
+              <div
+                key={name}
+                className="snake"
+                style={{
+                  transform: `translate(${x}px, ${y}px)`
+                }}
+              ></div>
+            );
+          })}
+        </GameArea>
+      </React.Fragment>
     );
   }
 }

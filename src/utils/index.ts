@@ -50,3 +50,14 @@ export const updateSnakeHistory = ({
     y: previusY
   };
 };
+
+export const generateRandomPoint = (): Array<Number> => {
+  const maxX = 390,
+    minX = 0,
+    maxY = 190,
+    minY = 0;
+
+  const X = Math.round((Math.random() * (maxX - minX) + minX) / 10) * 10;
+  const Y = Math.round((Math.random() * (maxY - minY) + minY) / 10) * 10;
+  return [X, Y];
+};

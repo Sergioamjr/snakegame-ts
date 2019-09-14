@@ -11,7 +11,16 @@
   transform: translate(0px, 0px);
   font-size: 0;
   position: absolute;
+  transition: transform ease 0.1s;
   &-point {
     background: red;
+    transition: none;
   }
+}
+
+.points {
+  color: #333;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-family: sans-serif;
 }
