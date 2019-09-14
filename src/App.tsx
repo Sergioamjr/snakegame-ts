@@ -1,24 +1,24 @@
 import React from "react";
 import GameArea from "./components/GameArea";
 import _get from "lodash/get";
-import { swithNewDirection } from "./utils";
+import { swithNewDirection, updateSnakeHistory } from "./utils";
 
 const stateDefault = {
   direction: "right",
   time: 500,
-  snake: {
-    x: 400 / 2,
-    y: 200 / 2
-  }
+  history: {
+    position_1: [400 / 2, 200 / 2]
+  },
+  point: [30, 20]
 };
 
 interface State {
   direction: String;
   time: Number;
-  snake: {
-    x: number;
-    y: number;
+  history: {
+    [k: string]: Array<Number>;
   };
+  point: Array<Number>;
 }
 
 class App extends React.Component<{}, State> {
@@ -35,20 +35,20 @@ class App extends React.Component<{}, State> {
     document.removeEventListener("keydown", this.updateDirectionHandler);
   };
 
-  componentDidUpdate = (_prevProps: {}, prevState: State) => {
-    if (prevState.snake !== this.state.snake) {
-      this.gameHasBeenOvered();
-    }
-  };
+  // componentDidUpdate = (_prevProps: {}, prevState: State) => {
+  //   if (prevState.history !== this.state.history) {
+  //     this.gameHasBeenOvered();
+  //   }
+  // };
 
-  gameHasBeenOvered = () => {
-    const {
-      snake: { x, y }
-    } = this.state;
-    if (x < 0 || x >= 400 || y < 0 || y >= 200) {
-      console.log("Game Over");
-    }
-  };
+  // gameHasBeenOvered = () => {
+  //   const {
+  //     snake: { x, y }
+  //   } = this.state;
+  //   if (x < 0 || x >= 400 || y < 0 || y >= 200) {
+  //     console.log("Game Over");
+  //   }
+  // };
 
   updateDirectionHandler = (event: KeyboardEvent) => {
     const code = _get(event, "code", "");
@@ -60,35 +60,53 @@ class App extends React.Component<{}, State> {
   };
 
   moveSnakeFoward = () => {
-    const {
-      direction,
-      snake: { x, y }
-    } = this.state;
-    const moveHorizontal = ["left", "right"].includes(direction);
-    const newXValue = direction === "left" ? x - 10 : x + 10;
-    const newYValue = direction === "up" ? y - 10 : y + 10;
+    const { history, direction } = this.state;
+    const historyIntoArray = Object.entries(history);
+    let newHistory = historyIntoArray.reduce((item, [name, values], index) => {
+      const [x, y] = values;
+      const { x: newX, y: newY } = updateSnakeHistory({
+        x,
+        y,
+        direction,
+        historyIntoArray,
+        index
+      });
+      return {
+        ...item,
+        [name]: [newX, newY]
+      };
+    }, {});
+
     this.setState({
-      snake: {
-        ...this.state.snake,
-        x: moveHorizontal ? newXValue : x,
-        y: !moveHorizontal ? newYValue : y
-      }
+      history: newHistory
     });
   };
 
   render() {
-    const {
-      snake: { x, y }
-    } = this.state;
-
+    const { history, point } = this.state;
+    const [pointX, pointY] = point;
     return (
       <GameArea>
-        <div
-          className="snake"
-          style={{
-            transform: `translate(${x}px, ${y}px)`
-          }}
-        ></div>
+        {pointX && pointY && (
+          <div
+            className="snake snake-point"
+            style={{
+              transform: `translate(${pointX}px, ${pointY}px)`
+            }}
+          ></div>
+        )}
+        {Object.entries(history).map(([name, values]) => {
+          const [x, y] = values;
+          return (
+            <div
+              key={name}
+              className="snake"
+              style={{
+                transform: `translate(${x}px, ${y}px)`
+              }}
+            ></div>
+          );
+        })}
       </GameArea>
     );
   }

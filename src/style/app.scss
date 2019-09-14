@@ -10,4 +10,8 @@
   background: #006cff;
   transform: translate(0px, 0px);
   font-size: 0;
+  position: absolute;
+  &-point {
+    background: red;
+  }
 }
