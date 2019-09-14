@@ -1,18 +1,18 @@
 import React from "react";
 import GameArea from "./components/GameArea";
-import _get from "lodash/get";
 import {
   swithNewDirection,
   updateSnakeHistory,
   generateRandomPoint
 } from "./utils";
+import SnakePart from "./components/SnakePart";
 
 const stateDefault = {
   direction: "right",
   time: 100,
   history: {
-    position_1: [400 / 2, 200 / 2],
-    position_2: [400 / 2 - 10, 200 / 2]
+    position_1: [300 / 2, 280 / 2],
+    position_2: [300 / 2 - 10, 280 / 2]
   },
   target: generateRandomPoint()
 };
@@ -52,21 +52,20 @@ class App extends React.Component<{}, State> {
     const [lastX, lastY] = Object.values(this.state.history)[historyLength - 1];
     const [pointX, pointY] = this.state.target;
     if (x === pointX && y === pointY) {
-      let newHistory = {
+      const history = {
         ...this.state.history,
         [`position_${historyLength + 1}`]: [lastX, lastY]
       };
+
       this.setState({
         target: generateRandomPoint(),
-        history: newHistory
+        history
       });
     }
   };
 
   updateDirectionHandler = (event: KeyboardEvent) => {
-    const code = _get(event, "code", "");
-    let direction = swithNewDirection(code, this.state.direction);
-
+    let direction = swithNewDirection(event.code, this.state.direction);
     this.setState({
       direction
     });
@@ -74,21 +73,23 @@ class App extends React.Component<{}, State> {
 
   moveSnakeFoward = () => {
     const { history, direction } = this.state;
-    const historyIntoArray = Object.entries(history);
-    let newHistory = historyIntoArray.reduce((item, [name, values], index) => {
-      const [x, y] = values;
-      const { x: newX, y: newY } = updateSnakeHistory({
-        x,
-        y,
-        direction,
-        historyIntoArray,
-        index
-      });
-      return {
-        ...item,
-        [name]: [newX, newY]
-      };
-    }, {});
+    const newHistory = Object.entries(history).reduce(
+      (item, [name, values], index) => {
+        const [x, y] = values;
+        const { x: newX, y: newY } = updateSnakeHistory({
+          x,
+          y,
+          direction,
+          history: Object.entries(history),
+          index
+        });
+        return {
+          ...item,
+          [name]: [newX, newY]
+        };
+      },
+      {}
+    );
 
     this.setState({
       history: newHistory
@@ -97,29 +98,12 @@ class App extends React.Component<{}, State> {
 
   render() {
     const { history, target } = this.state;
-    const [pointX, pointY] = target;
     return (
       <React.Fragment>
-        <p className="points">Score: {Object.keys(history).length - 2}</p>
         <GameArea>
-          <div
-            className="snake snake-point"
-            style={{
-              transform: `translate(${pointX}px, ${pointY}px)`
-            }}
-          ></div>
-
+          <SnakePart values={target} isPoint />
           {Object.entries(history).map(([name, values]) => {
-            const [x, y] = values;
-            return (
-              <div
-                key={name}
-                className="snake"
-                style={{
-                  transform: `translate(${x}px, ${y}px)`
-                }}
-              ></div>
-            );
+            return <SnakePart key={name} values={values} />;
           })}
         </GameArea>
       </React.Fragment>

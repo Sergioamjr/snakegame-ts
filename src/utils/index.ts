@@ -22,7 +22,7 @@ interface updateSnakeHistoryType {
   x: number;
   y: number;
   direction: string;
-  historyIntoArray: Array<any>;
+  history: Array<any>;
   index: number;
 }
 
@@ -30,7 +30,7 @@ export const updateSnakeHistory = ({
   x,
   y,
   direction,
-  historyIntoArray,
+  history,
   index
 }: updateSnakeHistoryType) => {
   if (index === 0) {
@@ -43,7 +43,7 @@ export const updateSnakeHistory = ({
     };
   }
 
-  const [, array] = historyIntoArray[index - 1];
+  const [, array] = history[index - 1];
   const [previusX, previusY] = array;
   return {
     x: previusX,
@@ -52,9 +52,9 @@ export const updateSnakeHistory = ({
 };
 
 export const generateRandomPoint = (): Array<Number> => {
-  const maxX = 390,
+  const maxX = 290,
     minX = 0,
-    maxY = 190,
+    maxY = 270,
     minY = 0;
 
   const X = Math.round((Math.random() * (maxX - minX) + minX) / 10) * 10;
