@@ -83,9 +83,24 @@
     color: #fff;
     border: 0;
     box-shadow: 1px 2px 5px black;
+    background-image: url("./../assets/caret-up.svg");
+    font-size: 0;
+    background-position: center;
+    background-size: 40px;
     &:nth-child(2n + 1) {
       margin-right: 10px;
       margin-bottom: 10px;
+    }
+    &:nth-child(2) {
+      transform: rotate(45deg) !important;
+    }
+
+    &:nth-child(3) {
+      transform: rotate(225deg) !important;
+    }
+
+    &:nth-child(4) {
+      transform: rotate(135deg) !important;
     }
   }
 }
@@ -98,4 +113,15 @@
 
 .unreverse {
   transform: rotateZ(-45deg);
+}
+
+.gameover {
+  background: #232323;
+  color: #fff;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  justify-content: center;
 }

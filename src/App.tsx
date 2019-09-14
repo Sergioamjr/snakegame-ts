@@ -6,25 +6,8 @@ import {
   generateRandomPoint
 } from "./utils";
 import SnakePart from "./components/SnakePart";
-
-const stateDefault = {
-  direction: "right",
-  time: 100,
-  history: {
-    position_1: [300 / 2, 280 / 2],
-    position_2: [300 / 2 - 10, 280 / 2]
-  },
-  target: generateRandomPoint()
-};
-
-interface State {
-  direction: String;
-  time: Number;
-  history: {
-    [k: string]: Array<Number>;
-  };
-  target: Array<Number>;
-}
+import { stateDefault } from "./utils/state";
+import { State } from "./utils/types";
 
 class App extends React.Component<{}, State> {
   state = {
@@ -42,7 +25,18 @@ class App extends React.Component<{}, State> {
 
   componentDidUpdate = (_prevProps: {}, prevState: State) => {
     if (prevState.history !== this.state.history) {
+      this.gameHasEnded();
       this.addNewPoint();
+    }
+  };
+
+  gameHasEnded = () => {
+    const [x, y] = Object.values(this.state.history)[0];
+    if (x < 0 || x >= 300 || y < 0 || y >= 280) {
+      console.log("game over");
+      this.setState({
+        gameover: true
+      });
     }
   };
 
@@ -64,15 +58,20 @@ class App extends React.Component<{}, State> {
     }
   };
 
-  updateDirectionHandler = (event: KeyboardEvent) => {
-    let direction = swithNewDirection(event.code, this.state.direction);
+  updateDirectionHandler = (event: KeyboardEvent | string) => {
+    const code = typeof event === "string" ? event : event.code;
+    console.log(code);
+    let direction = swithNewDirection(code, this.state.direction);
     this.setState({
       direction
     });
   };
 
   moveSnakeFoward = () => {
-    const { history, direction } = this.state;
+    const { history, direction, gameover } = this.state;
+    if (gameover) {
+      return false;
+    }
     const newHistory = Object.entries(history).reduce(
       (item, [name, values], index) => {
         const [x, y] = values;
@@ -97,14 +96,22 @@ class App extends React.Component<{}, State> {
   };
 
   render() {
-    const { history, target } = this.state;
+    const { history, target, gameover } = this.state;
     return (
       <React.Fragment>
-        <GameArea>
-          <SnakePart values={target} isPoint />
-          {Object.entries(history).map(([name, values]) => {
-            return <SnakePart key={name} values={values} />;
-          })}
+        <GameArea updateDirectionHandler={this.updateDirectionHandler}>
+          {gameover ? (
+            <div className="gameover">
+              <p>Game Over</p>
+            </div>
+          ) : (
+            <div>
+              <SnakePart values={target} isPoint />
+              {Object.entries(history).map(([name, values]) => {
+                return <SnakePart key={name} values={values} />;
+              })}
+            </div>
+          )}
         </GameArea>
       </React.Fragment>
     );
