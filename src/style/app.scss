@@ -122,6 +122,13 @@
     background-size: 20px;
     background-repeat: no-repeat;
   }
+
+  &-play {
+    background-image: url("./../assets/ui-play.svg");
+    font-size: 0;
+    background-size: 20px;
+    background-repeat: no-repeat;
+  }
 }
 
 button.unreverse.joystick-btn.joystick-reset {

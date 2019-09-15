@@ -11,7 +11,8 @@ import { State } from "./utils/types";
 
 class App extends React.Component<{}, State> {
   state = {
-    ...stateDefault
+    ...stateDefault,
+    paused: true
   };
 
   componentDidMount = () => {
@@ -121,12 +122,13 @@ class App extends React.Component<{}, State> {
           resetGameHandler={this.resetGameHandler}
           updateDirectionHandler={this.updateDirectionHandler}
         >
-          {gameover ? (
+          {gameover && (
             <div className="gameover">
               <p>Game Over</p>
               <p>Score: {Object.keys(history).length - 2}</p>
             </div>
-          ) : (
+          )}
+          {!gameover && (
             <div>
               <SnakePart values={target} isPoint />
               {Object.entries(history).map(([name, values]) => {

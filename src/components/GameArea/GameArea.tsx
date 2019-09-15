@@ -65,7 +65,9 @@ const GameArea: React.FC<Props> = props => {
               props.pauseGameHandler();
             }}
             disabled={props.gameover}
-            className="unreverse joystick-btn joystick-pause"
+            className={`unreverse joystick-btn joystick-${
+              !props.paused ? "pause" : "play"
+            }`}
           >
             1
           </button>
