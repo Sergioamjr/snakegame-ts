@@ -41,7 +41,13 @@ class App extends React.Component<{}, State> {
 
   gameHasEnded = () => {
     const [x, y] = Object.values(this.state.history)[0];
-    if (x < 0 || x >= 300 || y < 0 || y >= 280) {
+    const hasHitted = Object.values(this.state.history).filter(
+      ([historyX, historyY]) => {
+        return historyX === x && historyY === y;
+      }
+    );
+    // console.log("hasHitted", hasHitted.length);
+    if (x < 0 || x >= 300 || y < 0 || y >= 280 || hasHitted.length > 1) {
       this.setState({
         gameover: true
       });

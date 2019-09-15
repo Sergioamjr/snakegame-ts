@@ -2,16 +2,16 @@ export const swithNewDirection = (code: String, value: String): String => {
   let direction = value;
   switch (code) {
     case "ArrowLeft":
-      direction = "left";
+      direction = value === "right" ? value : "left";
       break;
     case "ArrowUp":
-      direction = "up";
+      direction = value === "down" ? value : "up";
       break;
     case "ArrowRight":
-      direction = "right";
+      direction = value === "left" ? value : "right";
       break;
     case "ArrowDown":
-      direction = "down";
+      direction = value === "up" ? value : "down";
       break;
   }
 
