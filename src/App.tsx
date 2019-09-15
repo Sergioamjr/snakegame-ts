@@ -1,4 +1,5 @@
 import React from "react";
+import _get from "lodash/get";
 import GameArea from "./components/GameArea";
 import {
   swithNewDirection,
@@ -15,13 +16,14 @@ class App extends React.Component<{}, State> {
   };
 
   componentDidMount = () => {
-    window.scrollTo(0, 1);
     setInterval(this.moveSnakeFoward, this.state.time);
     document.addEventListener("keydown", this.updateDirectionHandler);
+    window.addEventListener("resize", this.updateDeviceOrientationHanler);
   };
 
   componentWillUnmount = () => {
     document.removeEventListener("keydown", this.updateDirectionHandler);
+    window.removeEventListener("resize", this.updateDeviceOrientationHanler);
   };
 
   componentDidUpdate = (_prevProps: {}, prevState: State) => {
@@ -29,6 +31,12 @@ class App extends React.Component<{}, State> {
       this.gameHasEnded();
       this.addNewPoint();
     }
+  };
+
+  updateDeviceOrientationHanler = () => {
+    this.setState({
+      adjustToMobile: window.innerWidth < 540
+    });
   };
 
   gameHasEnded = () => {
@@ -105,13 +113,12 @@ class App extends React.Component<{}, State> {
   };
 
   render() {
-    const { history, target, gameover, paused } = this.state;
+    const { history, target, gameover } = this.state;
     return (
       <React.Fragment>
         <GameArea
-          paused={paused}
+          {...this.state}
           pauseGameHandler={this.pauseGameHandler}
-          gameOver={gameover}
           resetGameHandler={this.resetGameHandler}
           updateDirectionHandler={this.updateDirectionHandler}
         >

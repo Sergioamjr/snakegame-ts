@@ -2,7 +2,8 @@ import * as React from "react";
 
 type Props = {
   paused?: boolean;
-  gameOver?: boolean;
+  gameover?: boolean;
+  adjustToMobile?: boolean;
   pauseGameHandler: () => void;
   resetGameHandler: () => void;
   updateDirectionHandler: (event: KeyboardEvent | string) => void;
@@ -10,11 +11,11 @@ type Props = {
 
 const GameArea: React.FC<Props> = props => {
   return (
-    <div className="game-area">
+    <div className={`game-area ${props.adjustToMobile ? "rotate-90" : ""}`}>
       <div className="joystick">
         <form className="reverse">
           <button
-            disabled={props.gameOver || props.paused}
+            disabled={props.gameover || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowUp");
@@ -24,7 +25,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver || props.paused}
+            disabled={props.gameover || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowRight");
@@ -34,7 +35,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver || props.paused}
+            disabled={props.gameover || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowLeft");
@@ -44,7 +45,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver || props.paused}
+            disabled={props.gameover || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowDown");
@@ -63,7 +64,7 @@ const GameArea: React.FC<Props> = props => {
               e.preventDefault();
               props.pauseGameHandler();
             }}
-            disabled={props.gameOver}
+            disabled={props.gameover}
             className="unreverse joystick-btn joystick-pause"
           >
             1
@@ -73,7 +74,7 @@ const GameArea: React.FC<Props> = props => {
               e.preventDefault();
               props.resetGameHandler();
             }}
-            disabled={!props.gameOver}
+            disabled={!props.gameover}
             className="unreverse joystick-btn joystick-reset"
           >
             1

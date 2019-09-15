@@ -9,5 +9,6 @@ export const stateDefault = {
   },
   target: generateRandomPoint(),
   gameover: false,
-  paused: false
+  paused: false,
+  adjustToMobile: window.innerWidth < 540
 };

@@ -63,6 +63,8 @@
 
 .game-area {
   display: flex;
+  transform: rotate(0);
+  transition: transform 0.3s ease;
 }
 
 .joystick {
@@ -138,6 +140,9 @@ button.unreverse.joystick-btn.joystick-reset {
 
 .unreverse {
   transform: rotateZ(-45deg);
+}
+.rotate-90 {
+  transform: rotate(90deg);
 }
 
 .gameover {
