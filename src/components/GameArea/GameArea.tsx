@@ -1,7 +1,9 @@
 import * as React from "react";
 
 type Props = {
+  paused?: boolean;
   gameOver?: boolean;
+  pauseGameHandler: () => void;
   resetGameHandler: () => void;
   updateDirectionHandler: (event: KeyboardEvent | string) => void;
 };
@@ -12,7 +14,7 @@ const GameArea: React.FC<Props> = props => {
       <div className="joystick">
         <form className="reverse">
           <button
-            disabled={props.gameOver}
+            disabled={props.gameOver || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowUp");
@@ -22,7 +24,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver}
+            disabled={props.gameOver || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowRight");
@@ -32,7 +34,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver}
+            disabled={props.gameOver || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowLeft");
@@ -42,7 +44,7 @@ const GameArea: React.FC<Props> = props => {
             1
           </button>
           <button
-            disabled={props.gameOver}
+            disabled={props.gameOver || props.paused}
             onClick={e => {
               e.preventDefault();
               props.updateDirectionHandler("ArrowDown");
@@ -57,6 +59,10 @@ const GameArea: React.FC<Props> = props => {
       <div className="joystick joystick-right">
         <form className="reverse">
           <button
+            onClick={e => {
+              e.preventDefault();
+              props.pauseGameHandler();
+            }}
             disabled={props.gameOver}
             className="unreverse joystick-btn joystick-pause"
           >

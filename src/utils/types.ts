@@ -6,4 +6,5 @@ export interface State {
   };
   target: Array<Number>;
   gameover: boolean;
+  paused: boolean;
 }

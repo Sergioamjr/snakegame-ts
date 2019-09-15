@@ -34,7 +34,6 @@ class App extends React.Component<{}, State> {
   gameHasEnded = () => {
     const [x, y] = Object.values(this.state.history)[0];
     if (x < 0 || x >= 300 || y < 0 || y >= 280) {
-      console.log("game over");
       this.setState({
         gameover: true
       });
@@ -61,7 +60,6 @@ class App extends React.Component<{}, State> {
 
   updateDirectionHandler = (event: KeyboardEvent | string) => {
     const code = typeof event === "string" ? event : event.code;
-    console.log(code);
     let direction = swithNewDirection(code, this.state.direction);
     this.setState({
       direction
@@ -69,8 +67,8 @@ class App extends React.Component<{}, State> {
   };
 
   moveSnakeFoward = () => {
-    const { history, direction, gameover } = this.state;
-    if (gameover) {
+    const { history, direction, gameover, paused } = this.state;
+    if (gameover || paused) {
       return false;
     }
     const newHistory = Object.entries(history).reduce(
@@ -100,11 +98,19 @@ class App extends React.Component<{}, State> {
     this.setState(stateDefault);
   };
 
+  pauseGameHandler = () => {
+    this.setState({
+      paused: !this.state.paused
+    });
+  };
+
   render() {
-    const { history, target, gameover } = this.state;
+    const { history, target, gameover, paused } = this.state;
     return (
       <React.Fragment>
         <GameArea
+          paused={paused}
+          pauseGameHandler={this.pauseGameHandler}
           gameOver={gameover}
           resetGameHandler={this.resetGameHandler}
           updateDirectionHandler={this.updateDirectionHandler}
