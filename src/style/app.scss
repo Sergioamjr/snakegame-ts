@@ -75,6 +75,7 @@
     border-radius: 0 50px 50px 0;
     background: #ee5d54;
   }
+
   &-btn {
     width: 40px;
     height: 40px;
@@ -102,7 +103,31 @@
     &:nth-child(4) {
       transform: rotate(135deg) !important;
     }
+    &:disabled {
+      opacity: 0.3;
+    }
   }
+  &-reset {
+    background-image: url("./../assets/reply.svg") !important;
+    font-size: 0;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    transform: rotate(-45deg) !important;
+  }
+  &-pause {
+    background-image: url("./../assets/ui-pause.svg");
+    font-size: 0;
+    background-size: 20px;
+    background-repeat: no-repeat;
+  }
+}
+
+button.unreverse.joystick-btn.joystick-reset {
+  background-image: url("./../assets/reply.svg") !important;
+  font-size: 0;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  transform: rotate(-45deg) !important;
 }
 
 .reverse {
@@ -124,4 +149,5 @@
   font-family: sans-serif;
   text-transform: uppercase;
   justify-content: center;
+  flex-direction: column;
 }

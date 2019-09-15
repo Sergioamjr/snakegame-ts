@@ -15,6 +15,7 @@ class App extends React.Component<{}, State> {
   };
 
   componentDidMount = () => {
+    window.scrollTo(0, 1);
     setInterval(this.moveSnakeFoward, this.state.time);
     document.addEventListener("keydown", this.updateDirectionHandler);
   };
@@ -95,14 +96,23 @@ class App extends React.Component<{}, State> {
     });
   };
 
+  resetGameHandler = () => {
+    this.setState(stateDefault);
+  };
+
   render() {
     const { history, target, gameover } = this.state;
     return (
       <React.Fragment>
-        <GameArea updateDirectionHandler={this.updateDirectionHandler}>
+        <GameArea
+          gameOver={gameover}
+          resetGameHandler={this.resetGameHandler}
+          updateDirectionHandler={this.updateDirectionHandler}
+        >
           {gameover ? (
             <div className="gameover">
               <p>Game Over</p>
+              <p>Score: {Object.keys(history).length - 2}</p>
             </div>
           ) : (
             <div>
