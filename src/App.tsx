@@ -46,7 +46,6 @@ class App extends React.Component<{}, State> {
         return historyX === x && historyY === y;
       }
     );
-    // console.log("hasHitted", hasHitted.length);
     if (x < 0 || x >= 300 || y < 0 || y >= 280 || hasHitted.length > 1) {
       this.setState({
         gameover: true
@@ -55,19 +54,14 @@ class App extends React.Component<{}, State> {
   };
 
   addNewPoint = () => {
-    const historyLength = Object.values(this.state.history).length;
-    const [x, y] = Object.values(this.state.history)[0];
-    const [lastX, lastY] = Object.values(this.state.history)[historyLength - 1];
+    const { history } = this.state;
+    const [x, y] = history[0];
+    const [lastX, lastY] = history[history.length - 1];
     const [pointX, pointY] = this.state.target;
     if (x === pointX && y === pointY) {
-      const history = {
-        ...this.state.history,
-        [`position_${historyLength + 1}`]: [lastX, lastY]
-      };
-
       this.setState({
-        target: generateRandomPoint(),
-        history
+        history: history.concat([[lastX, lastY]]),
+        target: generateRandomPoint()
       });
     }
   };
@@ -85,23 +79,18 @@ class App extends React.Component<{}, State> {
     if (gameover || paused) {
       return false;
     }
-    const newHistory = Object.entries(history).reduce(
-      (item, [name, values], index) => {
-        const [x, y] = values;
-        const { x: newX, y: newY } = updateSnakeHistory({
-          x,
-          y,
-          direction,
-          history: Object.entries(history),
-          index
-        });
-        return {
-          ...item,
-          [name]: [newX, newY]
-        };
-      },
-      {}
-    );
+    let newHistory: Array<Array<number>> = [];
+    for (let index = 0; index < history.length; index++) {
+      const [x, y] = history[index];
+      const { x: newX, y: newY } = updateSnakeHistory({
+        x,
+        y,
+        direction,
+        history,
+        index
+      });
+      newHistory.push([newX, newY]);
+    }
 
     this.setState({
       history: newHistory
@@ -131,14 +120,14 @@ class App extends React.Component<{}, State> {
           {gameover && (
             <div className="gameover">
               <p>Game Over</p>
-              <p>Score: {Object.keys(history).length - 2}</p>
+              <p>Score: {history.length - 2}</p>
             </div>
           )}
           {!gameover && (
             <div>
               <SnakePart values={target} isPoint />
-              {Object.entries(history).map(([name, values]) => {
-                return <SnakePart key={name} values={values} />;
+              {history.map((values, index) => {
+                return <SnakePart key={index} values={values} />;
               })}
             </div>
           )}

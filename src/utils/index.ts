@@ -43,8 +43,8 @@ export const updateSnakeHistory = ({
     };
   }
 
-  const [, array] = history[index - 1];
-  const [previusX, previusY] = array;
+  // const [array] = history[index - 1];
+  const [previusX, previusY] = history[index - 1];
   return {
     x: previusX,
     y: previusY
