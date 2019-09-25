@@ -46,11 +46,20 @@ class App extends React.Component<{}, State> {
         return historyX === x && historyY === y;
       }
     );
-    if (x < 0 || x >= 300 || y < 0 || y >= 280 || hasHitted.length > 1) {
-      this.setState({
+    if (
+      x < 0 ||
+      x >= 300 ||
+      y < 0 ||
+      y >= 280 ||
+      (hasHitted.length > 1 && !this.state.isChanging)
+    ) {
+      return this.setState({
         gameover: true
       });
     }
+    this.setState({
+      isChanging: false
+    });
   };
 
   addNewPoint = () => {
@@ -70,6 +79,7 @@ class App extends React.Component<{}, State> {
     const code = typeof event === "string" ? event : event.code;
     let direction = swithNewDirection(code, this.state.direction);
     this.setState({
+      isChanging: true,
       direction
     });
   };

@@ -1,4 +1,5 @@
 export interface State {
+  isChanging: boolean;
   direction: String;
   time: Number;
   history: Array<Array<Number>>;
